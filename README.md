@@ -1,2 +1,3 @@
 # codechef_rating_v0
-Not yet accurate
+
+Run main.py after editing it with the tag for the desired contest.
