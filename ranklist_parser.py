@@ -1,29 +1,10 @@
 import bs4 as bs
 import sys
 import pickle
-
-from PyQt5.QtWebEngineWidgets import QWebEnginePage
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QUrl
 import time
 
-class Page(QWebEnginePage):
-    QA = QApplication(sys.argv)
-    def __init__(self, url):
-        self.app = Page.QA
-        QWebEnginePage.__init__(self)
-        self.html = ''
-        self.loadFinished.connect(self._on_load_finished)
-        self.load(QUrl(url))
-        self.app.exec_()
+from page import Page
 
-    def _on_load_finished(self):
-        self.html = self.toHtml(self.Callable)
-        print('Load finished')
-
-    def Callable(self, html_str):
-        self.html = html_str
-        self.app.quit()
 
 
 class RankListParser:
@@ -52,9 +33,9 @@ class RankListParser:
                     username_list[i] = username_list[i].find('a')['href'].split('/')[-1]
                 self.user_list.extend(username_list)
                 j += 1
-                print(j-1, len(self.user_list));
+                print("Page:\t", j-1," :: ", "Users:\t", len(self.user_list));
             except:
-                print("Failed")
+                print("Network Error from RankListParser.")
                 time.sleep(2)
     
 ##        print(self.user_list)

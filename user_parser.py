@@ -1,38 +1,7 @@
-##pip install bs4
-##pip install lxml
-##pip install PyQt5==5.9
-
 import sys
 import math
+from page import Page
 from bs4 import BeautifulSoup
-
-from PyQt5.QtWebEngineWidgets import QWebEnginePage
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QUrl
-
-headers = {
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
-
-class Page(QWebEnginePage):
-    QA = QApplication(sys.argv)
-    
-    def __init__(self, url):
-        self.app = Page.QA
-        QWebEnginePage.__init__(self)
-        self.html = ''
-        self.loadFinished.connect(self._on_load_finished)
-        self.load(QUrl(url))
-        self.app.exec_()
-
-    def _on_load_finished(self):
-        self.html = self.toHtml(self.Callable)
-        print('Load finished')
-
-    def Callable(self, html_str):
-        self.html = html_str
-        self.app.quit()
-
-        
 
 class UserParser:
     def __init__(self, user):
@@ -67,6 +36,7 @@ class UserParser:
             self.y_scale = y_scale
             self.plot = plot
         except:
+            print("Warning: "+self.url+" may not exist.")
             self.y_scale = list()
             self.plot = list()
 
@@ -108,7 +78,7 @@ class UserParser:
         return self.rating_history[-1]
 
             
-U = UserParser("noob77777")
+U = UserParser("gennady.korotkevich")
 
 def isDeleted(user):
     source = "https://codechef.com/users/" + user

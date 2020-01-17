@@ -33,13 +33,13 @@ class DataBase:
                     f = open(self.contest+'/'+user+'.dat', "wb")
                     pickle.dump(U, f)
                     f.close()
-                    print(c)
+                    print(c, user)
                 except:
                     try:
                         if user_parser.isDeleted(user):
                             delete.append(user)
                     except:
-                        print(user)
+                        print(user+" : Network Error from DataBase.")
                         flag = False
 
         for user in delete:
@@ -71,6 +71,7 @@ class DataBase:
     def getTimesPlayed(self, user):
         if user in self.TimesPlayed:
             return self.TimesPlayed[user]
+        
         f = open(self.contest+'/'+user+'.dat', "rb")
         U = pickle.load(f)
         f.close()
@@ -85,16 +86,18 @@ class DataBase:
         return 1 / (1 + pow(4, (Ra - Rb)/sqrt((Va**2 + Vb**2))))
 
     def ERank(self, user):
-        res = -0.5
+        res = 0
         for user2 in self.user_list:
             res += self.Eab(user, user2)
         return res
     
     def getRavg(self):
         if(self.Ravg != None): return self.Ravg
+
         s = 0
         for user in self.user_list:
             s += self.getRating(user)
+            
         self.Ravg = s/len(self.user_list) 
         return self.Ravg
 
