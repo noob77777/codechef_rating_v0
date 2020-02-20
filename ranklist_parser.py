@@ -51,4 +51,3 @@ class RankListParser:
         return li
 
 
-

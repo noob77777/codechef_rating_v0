@@ -4,6 +4,7 @@ import pickle
 import time
 from user_parser import UserParser
 from math import *
+import threading
 
 class DataBase:
     def __init__(self, contest, users):
@@ -21,30 +22,77 @@ class DataBase:
         c = 0
         flag = True
         delete = []
+
+        THREADS = []
+
+        def f(user):
+            try:
+                U = UserParser(user)
+                U.parse()
+                U.calc()
+                fout = open(self.contest+'/'+user+'.dat', "wb")
+                pickle.dump(U, fout)
+                fout.close()
+                print(c, user)
+            except:
+                try:
+                    if user_parser.isDeleted(user):
+                        delete.append(user)
+                except:
+                    print(user+" : Network Error from DataBase.")
+                    flag = False
+                    
+
         for user in self.user_list:
-            c += 1
             if os.path.exists(self.contest+'/'+user+'.dat'):
                 continue
-            else:
-                try:
-                    U = UserParser(user)
-                    U.parse()
-                    U.calc()
-                    f = open(self.contest+'/'+user+'.dat', "wb")
-                    pickle.dump(U, f)
-                    f.close()
-                    print(c, user)
-                except:
-                    try:
-                        if user_parser.isDeleted(user):
-                            delete.append(user)
-                    except:
-                        print(user+" : Network Error from DataBase.")
-                        flag = False
+            
+            t = threading.Thread(target=f, args=(user,))
+            THREADS.append(t)
+
+            if len(THREADS) == 250:
+                for thread in THREADS:
+                    thread.start()
+
+                for thread in THREADS:
+                    thread.join()
+
+                THREADS = list()
+                time.sleep(5)
+
+        for thread in THREADS:
+            thread.start()
+        for thread in THREADS:
+            thread.join()
+        THREADS = list()
+        
+        
+##        for user in self.user_list:
+##            c += 1
+##            if os.path.exists(self.contest+'/'+user+'.dat'):
+##                continue
+##            else:
+##                try:
+##                    U = UserParser(user)
+##                    U.parse()
+##                    U.calc()
+##                    f = open(self.contest+'/'+user+'.dat', "wb")
+##                    pickle.dump(U, f)
+##                    f.close()
+##                    print(c, user)
+##                except:
+##                    try:
+##                        if user_parser.isDeleted(user):
+##                            delete.append(user)
+##                    except:
+##                        print(user+" : Network Error from DataBase.")
+##                        flag = False
 
         for user in delete:
             index = self.user_list.index(user)
             self.user_list.pop(index)
+
+##        print(delete)
                           
         return flag
 

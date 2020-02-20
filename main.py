@@ -6,7 +6,9 @@
 from ranklist_parser import RankListParser
 from file_system import DataBase
 
-contest = "LTIME78A"
+print("START")
+
+contest = "LTIME80A"
 
 R = RankListParser(contest)
 print("Parsing Ranklist.")
@@ -14,6 +16,8 @@ R.parse()
 R.save()
 
 li = R.load()
+
+print("here")
 
 DB = DataBase(contest, li)
 
