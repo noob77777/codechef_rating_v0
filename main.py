@@ -8,7 +8,7 @@ from file_system import DataBase
 
 print("START")
 
-contest = "LTIME80A"
+contest = "LTIME98B"
 
 R = RankListParser(contest)
 print("Parsing Ranklist.")
